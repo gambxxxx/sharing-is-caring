@@ -19,4 +19,8 @@ def check_uptime():
         finally:
             time.sleep(t)
 
-check_uptime()
+def main():
+    check_uptime()
+
+if __name__ == '__main__':
+    main()
