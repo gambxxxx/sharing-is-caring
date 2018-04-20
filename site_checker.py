@@ -18,7 +18,6 @@ def check_uptime():
             print (f' is {Fore.RED}DOWN !!!{Style.RESET_ALL}')
         finally:
             time.sleep(t)
-
 def main():
     check_uptime()
 
