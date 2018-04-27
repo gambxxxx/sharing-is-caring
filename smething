@@ -1,0 +1,12 @@
+openssl req -newkey rsa:2048 -nodes -subj '/CN=127.0.0.1' -keyout petar-new.pem -x509 -days 365 -out petar-new-certificate.pem
+
+
+
+
+ 2095  sudo ufw app list
+ 2096  sudo ufw status
+ 2097  sudo ufw allow 'Apache Full'
+ 2098  sudo ufw delete allow 'Apache'
+ 2099  sudo ufw status
+ 2100  sudo a2enmod ssl
+ nginx

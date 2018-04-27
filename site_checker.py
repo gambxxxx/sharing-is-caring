@@ -1,12 +1,12 @@
 import urllib.request
 import time
-import colorama
 from colorama import Fore
 from colorama import Style
+
 def check_uptime():
-    t=300 
+    t=300 ###########################################3####### Smeni ako sakas za pochesto / poretko da proverva (vo sec)
     web_site_url="http://allutomotive.com/"
-    web_site_name="Allutomotive"
+    web_site_name="Allutomotive.com"
     while True:
         try:
             print(urllib.request.urlopen(web_site_url).getcode())
@@ -17,8 +17,5 @@ def check_uptime():
             print (f' is {Fore.RED}DOWN !!!{Style.RESET_ALL}')
         finally:
             time.sleep(t)
-def main():
-    check_uptime()
 
-if __name__ == '__main__':
-    main()
+check_uptime()
