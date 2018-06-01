@@ -1,0 +1,40 @@
+---
+  - hosts: all
+    become: true
+
+  - name: Install updates
+    shell: sudo apt-get update
+
+  - name: Install nginx
+    apt: name=nginx state=present update_cache=yes
+
+  - name: Install jenkins
+    apt: name=jenkins state=present update_cache=yes
+
+  - name: Install Atom
+    apt: name=atom state=present update_cache=yes
+
+  - name: Install python3
+    apt: name=python3 state=present update_cache=yes
+
+  - name: Install VLC player
+    apt: name=vlc state=present update_cache=yes
+
+  - name: Install Conky
+    apt: name=conky state=present update_cache=yes
+
+  - name: Install VirtualBox
+    apt: name=virtualbox state=present update_cache=yes
+
+  - name: Install Docker
+    shell: |
+          curl -fsSL get.docker.com -o get-docker.sh 
+          sh get-docker.sh
+
+  - name: Install Visual Studio Code
+    shell: |
+          curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg 
+          sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg 
+          sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+          sudo apt-get update 
+          sudo apt-get install code
