@@ -31,6 +31,12 @@
           curl -fsSL get.docker.com -o get-docker.sh 
           sh get-docker.sh
 
+  - name: Install Skype
+    shell: |
+          sudo add-apt-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner"
+          sudo apt-get update 
+          sudo apt-get install skype
+
   - name: Install Visual Studio Code
     shell: |
           curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg 
