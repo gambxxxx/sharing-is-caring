@@ -8,6 +8,14 @@
   - name: Install nginx
     apt: name=nginx state=present update_cache=yes
 
+  - name: Configure nginx
+    copy:
+      src: ./nginx-ansi.conf
+      dest: /etc/nginx/nginx.conf
+  
+  - name: Restart nginx
+    service: name=nginx state=restarted
+
   - name: Install jenkins
     apt: name=jenkins state=present update_cache=yes
 
