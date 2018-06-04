@@ -13,7 +13,7 @@ sleep 2
 
 ansible-playbook -i hosts -K installer-playbook.yml
 
-echo "Generating Ssh-key in ${$HOME/.ssh}..."
+echo "Generating Ssh-key in $HOME/.ssh}..."
 sleep 2
 ssh-keygen -t rsa -b 2048 -N "" -f $HOME/.ssh
 sleep 2
