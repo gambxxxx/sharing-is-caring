@@ -1,0 +1,112 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "SubnetAz0": { "Type": "String" },
+    "SubnetAz1": { "Type": "String" },
+    "VpcNetBlock": { "Type": "String" }
+  },
+  "Resources": {
+    "Vpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": { "Ref": "VpcNetBlock" },
+        "InstanceTenancy": "default",
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "true"
+      }
+    },
+    "MountTargetSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "VpcId": { "Ref": "Vpc" },
+        "GroupDescription": "Security group for mount target",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "2049",
+            "ToPort": "2049",
+            "SourceSecurityGroupId" : { "Ref": "InstanceSecurityGroup" }
+          }
+        ]
+      }
+    },
+    "InstanceSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Source Defender EC2 Security Group",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol" : "tcp",
+            "FromPort" : "22",
+            "ToPort" : "22",
+            "CidrIp" : "0.0.0.0/0"
+          }
+        ],
+        "VpcId": { "Ref": "Vpc" }
+      }
+    },
+    "InstanceSubnet0": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Ref": "SubnetAz0" },
+        "MapPublicIpOnLaunch": true,
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs" : "" } ] },
+        "VpcId": { "Ref": "Vpc" }
+      }
+    },
+    "InstanceSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Ref": "SubnetAz1" },
+        "MapPublicIpOnLaunch": true,
+        "AvailabilityZone": { "Fn::Select" : [ "1", { "Fn::GetAZs" : "" } ] },
+        "VpcId": { "Ref": "Vpc" }
+      }
+    },
+    "SubnetRouteTableAssociation0": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": { "Ref": "RouteTable" },
+        "SubnetId": { "Ref": "InstanceSubnet0" }
+      }
+    },
+    "SubnetRouteTableAssociation1": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": { "Ref": "RouteTable" },
+        "SubnetId": { "Ref": "InstanceSubnet1" }
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway"
+    },
+    "VPCGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": { "Ref": "Vpc" },
+        "InternetGatewayId": { "Ref": "InternetGateway" }
+      }
+    },
+    "DefaultRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": { "Ref": "RouteTable" },
+        "GatewayId": { "Ref": "InternetGateway" }
+      },
+      "DependsOn": "VPCGatewayAttachment"
+    },
+    "RouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "Vpc" }
+      }
+    }
+  },
+  "Outputs": {
+    "VpcId": { "Value": { "Ref" : "Vpc" } },
+    "MountTargetSecurityGroup": { "Value": { "Ref": "MountTargetSecurityGroup" } },
+    "InstanceSecurityGroup": { "Value": { "Ref": "InstanceSecurityGroup" } },
+    "InstanceSubnets": { "Value": { "Fn::Join": [ ",", [ { "Ref": "InstanceSubnet0" }, { "Ref": "InstanceSubnet1" } ] ] } }
+  }
+}

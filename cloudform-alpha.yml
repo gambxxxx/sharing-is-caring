@@ -1,0 +1,68 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  SubnetAz0:
+    Type: String
+  SubnetAz1:
+    Type: String
+  VpcNetBlock:
+    Type: String
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidBlock:
+        Ref: VpcNetBlock
+      InstanceTenancy: default
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+  MountTargetSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+    VpcId:
+      Ref: Vpc
+    GroupDescription: Security group for mount target
+    SecurityGroupIngress:
+      IpProtocol: tcp
+      FromPort: '4569'
+      ToPort: '4569'
+      SourceSecurityGroupId:
+        Ref: InstanceSecurityGroup
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Source Defender EC2 SecurityGroup
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+      VpcId:
+        Ref: Vpc
+  InstanceSubnet0:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Ref: SubnentAz0
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: Fn::Select : ["0", Fn::GetAzs : '' ]
+      VpcId: 
+        Ref: Vpc
+  InstanceSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Ref: SubnetAz1
+      MapPublicOnLaunch: true
+      AvailabilityZone: Fn::Select : ["1", Fn::GetAzs : '' ]
+      VpcId:
+        Ref: Vpc
+  SubnetRouteTableAssociation0:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: RouteTable
+      SubnetId:
+        Ref: InstanceSubnet0
+      
