@@ -45,7 +45,7 @@ Resources:
       Tags:
         - Key: Name
           Value: Public Route Table
-  
+
   PublicRoute:
     Type: AWS::EC2::Route
     Properties:
