@@ -1,0 +1,9 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  VPC: AWS::EC2::VPC
+  CidrBlock: 172.31.0.0/20
+  EnableDnsSUpport: true
+  EnableDnsHostNames: true
+  InstanceTenancy: default
