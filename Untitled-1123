@@ -1,7 +1,10 @@
-aws --endpoint-url=http://localhost:4568 cloudformation deploy --template-file /home/petar/sharing-is-caring/ec2-localhost-alpha.yaml --stack-name library --capabilities CAPABILITY_IAM
+aws --endpoint-url=http://localhost:4568 cloudformation deploy --template-file /home/petar/sharing-is-caring/wordpress-template.json --stack-name library --capabilities CAPABILITY_IAM
 
 
 2018-06-05T12:23:54:WARNING:infra.pyc: Service "elasticsearch" not yet available, retrying...
 localstack_1  | Starting mock ES service (http port 4578)...
 localstack_1  | Starting mock Lambda service (http port 4574)...
 localstack_1  | Ready.
+
+
+aws cloudformation create-stack --stack-name foo --template-body /home/petar/sharing-is-caring/wordpress-template.json --endpoint-url http://localhost:4581
