@@ -1,5 +1,5 @@
 ---
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: '2010-09-09'
 
 Resources:
   VPC: AWS::EC2::VPC
@@ -59,8 +59,40 @@ SubnetRouteTableAssociation:
     SubnetId: !Ref SubnetB
 
 SecurityGroup:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupName: "Internet Group"
+    GroupDescription: "SSH else out"
+    VPCId: !Ref VPC
+    SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        Cidr: 0.0.0.0/0
+    SecurityGroupEgress:
+      - IpProtocol: -1
+        Cidr: 0.0.0.0/0
+
+BastionMainLogGroup:
+  Type: AWS::Logs::LogGroup
+  SshMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: !Ref BastionMainLogGroup
+
+BastionHostRule:
+  Type: AWS::IAM::Role
+  Properties:
+    Policies:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Action: 
+            s3:GetObject
 
 BastionAMIOS:
+  Type: AWS::EC2::BastionHost
+  Properties: 
 
 BastionInstanceType:
 
@@ -71,3 +103,5 @@ Nat:
     SubnetId: !Ref SubnetA
     Tages:
       - Resource Tag
+
+      07132199-e854-4dab-b377-538c84ce3a6b
