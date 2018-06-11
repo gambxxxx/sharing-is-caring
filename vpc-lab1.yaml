@@ -63,7 +63,7 @@ Resources:
 
   BastionAMIOS:
     AllowedValues:
-    - Amazon-Linuz-HVM
+    - Amazon-Linux-HVM
     - CentOS-7-HVM
     - Ubuntu-Server-14.04-LTS-HVM
     - Ubuntu-Server-16.04-LTS-HVM
