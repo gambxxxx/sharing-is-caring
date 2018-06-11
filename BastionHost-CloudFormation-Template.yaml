@@ -103,5 +103,3 @@ Nat:
     SubnetId: !Ref SubnetA
     Tages:
       - Resource Tag
-
-      07132199-e854-4dab-b377-538c84ce3a6b
