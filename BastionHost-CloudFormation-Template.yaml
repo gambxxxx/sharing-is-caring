@@ -91,10 +91,28 @@ BastionHostRule:
             s3:GetObject
 
 BastionAMIOS:
-  Type: AWS::EC2::BastionHost
-  Properties: 
+  AllowedValues:
+    Amazon-Linux-HVM
+    CentOS-7-HVM
+    Ubuntu-Server-14.06-LTS-HVM
+    Ubuntu-Server-16.06-LTS-HVM
+  Default: Amazon-Linux-HVM
+  Description: Linux Distro for the bastion instance
+  Type: String
+  
+DistroBanner:
+  Default: https://aws-quickstart.s3.amazonaws.com/quickstart-linux-bastihttps://aws-quickstart.s3.amazonaws.com/quickstart-linux-bastion/scripts/banner_message.txton/scripts/banner_message.txt
+  Description: Banner Text to display upon login
+  Type: String
 
 BastionInstanceType:
+  AllowedValues:
+    - t2.nano
+    - t2.micro
+  Default:
+    - t2.micro
+  Description: Bastion Host instance type
+    Type: String
 
 Nat:
   Type: AWS::EC2::NatGateway
