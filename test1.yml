@@ -1,0 +1,120 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resource:
+  VPC:
+    Type: AWS::EC2::VPC
+    CidrBlock: 172.31.0.1/20
+    EnableDnsSupport: true
+    EnableDnsHostNames: true
+    InstanceTenancy: default
+
+  InternetGatewayAttachment: AWS::EC2::InternetGateway
+
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VPCId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  SubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-1a
+      VPCId: !Ref VPC
+      CidrBlock: 172.31.0.1/20
+      MapPublicIpOnLaunch: true
+
+  SubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-1b
+      VpcId: !Ref VPC
+      CidrBlock: 172.31.16.1/20
+      MapPublicIpOnLaunch: true
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  InternetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGateway
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref RouteTable
+
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetA
+
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetB  
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "Internet Group"
+      GroupDescription: "Only ssh secure login enabled, everything else OUT!"
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          Cidr: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          Cidr: 0.0.0.0/0
+
+  BastionMainLogGroup:
+    Type: AWS::EC2::LogGroup
+    
+  SshMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: !Ref BastinMainLogGroup
+
+  BastionHostRule:
+    Type: AWS::IAM::Role  
+    Properties:
+      Policies:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            Action:
+              S3:GetObject
+
+  BastionHostAMIOS:
+    AllowedValues:
+      Amazon-Linux-HVM
+      CentOS-7-HVM
+      Ubuntu-Server-14.06-LTS-HVM
+      Ubuntu-Server-16.06-LTS-HVM
+      Ubuntu-Server-18.06-LTS-HVM
+    Default: Amazon-Linux-HVM
+    Description: "Linux distro for the BastionHost instance"
+    Type: String
+
+  BastionInstanceType:
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+    Default: 
+      - t2.micro
+    Description: "Bastion Host instance type"
+      Type: String
+
+  Nat:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      Allocation: String
+      SubnetId: !Ref SubnetA
+      Tags:
+        - Resource Tag    
