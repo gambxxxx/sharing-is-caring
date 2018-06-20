@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Install curl
+      apt: name=curl state=present update_cache=yes
+
+    - name: Install python3
+      apt: name=python3 state=present update_cache=yes
+
+    - name: install unzip
+      apt: name=unzip state=present update_cache=yes
+
+    - name: Install apache2
+      apt: name=apache2 state=present update_cache=yes
+
+    - name: Install Nginx
+      apt: name=nginx state=present update_cache=yes
+
+    - name: Ensure Nginx started
+      service: name=nginx state=started enabled=yes
+
+    - name: Install atom
+      apt: name=atom state=present update_cache=yes
+
+    - name: Install Terminator
+      apt: name=terminator state=present update_cache=yes
+    
+    - name: Install Git
+      apt: name=git state=present update_cache=yes
+
+    - name: Install VirtualBox
+      apt: name=virtualbox state=present update_cache=yes
+    
+    - name: Install Vagrant
+      apt: name=vagrant state=present update_cache=yes
