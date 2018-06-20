@@ -1,5 +1,5 @@
 ---
-  - hosts: 127.0.0.1
+  - hosts: localhost
     become: yes
     tasks: 
       - name: Install updates
@@ -7,11 +7,6 @@
 
       - name: Install nginx
         apt: name=nginx state=present update_cache=yes
-
-      - name: Configure nginx
-        copy:
-          src: ./nginx-ansi.conf
-          dest: /etc/nginx/nginx.conf
   
       - name: Restart nginx
         service: name=nginx state=restarted
