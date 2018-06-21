@@ -1,6 +1,9 @@
 #!/bin/bash
 #
 #
+green=`tput setaf 2`
+yellow=`tput setaf 3`
+clear=`tput sgr0`
 
 echo "${yellow}Installing Ansible${clear}"
 sleep 2
