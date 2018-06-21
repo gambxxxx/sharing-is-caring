@@ -20,9 +20,6 @@
     - name: Ensure Nginx started
       service: name=nginx state=started enabled=yes
 
-    - name: Install atom
-      apt: name=atom state=present update_cache=yes
-
     - name: Install Terminator
       apt: name=terminator state=present update_cache=yes
     
