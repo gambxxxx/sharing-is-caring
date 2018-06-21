@@ -3,6 +3,7 @@
 #
 green=`tput setaf 2`
 yellow=`tput setaf 3`
+magenta=`tput setaf 5`
 clear=`tput sgr0`
 
 echo "${yellow}Installing Ansible${clear}"
@@ -41,16 +42,15 @@ echo "${green}Successfully installed Visual Studio Code${clear}"
 sleep 3
 echo "Finished installing packages"
 sleep 5
-echo "The following packages were installed:"
-docker --version
-ansible --version
-code --version
-ansible --version
-virtualbox --version
-nginx --version
-git --version
-apache2 --version
-python --version
+echo "${green}The following packages were installed:${clear}"
+echo "${magenta}Docker${clear}"
+echo "${magenta}VirtualBox${clear}"
+echo "${magenta}Ansible${clear}"
+echo "${magenta}Visual Studio Code${clear}"
+echo "${magenta}Nginx${clear}"
+echo "${magenta}apache2${clear}"
+echo "${magenta}Git${clear}"
+echo "${magenta}Python3${clear}"
 sleep 15
 echo "Generating ssh"
 echo "enter e-mail"
